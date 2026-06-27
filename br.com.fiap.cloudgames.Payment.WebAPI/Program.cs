@@ -15,7 +15,6 @@ using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Repositories;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Service;
 using br.com.fiap.cloudgames.Payment.WebAPI.Middlewares;
 using br.com.fiap.cloudgames.Payment.WebAPI.Setup;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -39,19 +38,6 @@ builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("R
 //Add Db Context
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")), ServiceLifetime.Scoped );
-
-//Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(option =>
-    {
-        option.Password.RequireUppercase = true;
-        option.Password.RequireLowercase = true;
-        option.Password.RequireDigit = true;
-        option.Password.RequireNonAlphanumeric = true;
-        option.Password.RequiredLength = 8;
-        option.User.RequireUniqueEmail = true;
-    })
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddApiEndpoints();
 
 //Authentication
 builder.Services.AddAuthentication(options =>
@@ -136,9 +122,6 @@ using (var scope = app.Services.CreateScope())
 
 app.UseRequestLoggingMiddleware();
 app.UseErrorHandlingMiddleware();
-
-//Map Identity Endpoints
-//app.MapIdentityApi<IdentityUser>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
