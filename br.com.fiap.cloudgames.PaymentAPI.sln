@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.3.11520.95 d18.3
+VisualStudioVersion = 18.3.11520.95
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "br.com.fiap.cloudgames.Payment.WebAPI", "br.com.fiap.cloudgames.Payment.WebAPI\br.com.fiap.cloudgames.Payment.WebAPI.csproj", "{B10B0974-F5D5-4639-A8BB-DB78D2C250A9}"
 EndProject
@@ -20,6 +19,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "br.com.fiap.cloudgames.Payment.Application.Tests", "br.com.fiap.cloudgames.Payment.Application.Tests\br.com.fiap.cloudgames.Payment.Application.Tests.csproj", "{5E0B6A20-5326-4ADF-87BC-15728C62D48C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "br.com.fiap.cloudgames.Payment.Specs", "br.com.fiap.cloudgames.Payment.Specs\br.com.fiap.cloudgames.Payment.Specs.csproj", "{BB6BF4C8-7951-4AF3-A755-BDCB6B9DFC72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "br.com.fiap.cloudgames.Payment.WorkerService", "br.com.fiap.cloudgames.Payment.WorkerService\br.com.fiap.cloudgames.Payment.WorkerService.csproj", "{6C26C2C1-EE71-48A5-AA7D-5A524AF5161B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +56,10 @@ Global
 		{BB6BF4C8-7951-4AF3-A755-BDCB6B9DFC72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB6BF4C8-7951-4AF3-A755-BDCB6B9DFC72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB6BF4C8-7951-4AF3-A755-BDCB6B9DFC72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C26C2C1-EE71-48A5-AA7D-5A524AF5161B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C26C2C1-EE71-48A5-AA7D-5A524AF5161B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C26C2C1-EE71-48A5-AA7D-5A524AF5161B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C26C2C1-EE71-48A5-AA7D-5A524AF5161B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,5 +72,6 @@ Global
 		{34651BA6-CD9E-461A-9FF8-FFFAD2D90231} = {3881E08D-6683-45FB-BFFA-5F1F6634FA68}
 		{5E0B6A20-5326-4ADF-87BC-15728C62D48C} = {3881E08D-6683-45FB-BFFA-5F1F6634FA68}
 		{BB6BF4C8-7951-4AF3-A755-BDCB6B9DFC72} = {3881E08D-6683-45FB-BFFA-5F1F6634FA68}
+		{6C26C2C1-EE71-48A5-AA7D-5A524AF5161B} = {D23B4905-7310-4CF1-B93B-74D785DAE5D4}
 	EndGlobalSection
 EndGlobal

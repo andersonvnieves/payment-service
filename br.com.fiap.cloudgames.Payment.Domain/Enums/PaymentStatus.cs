@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace br.com.fiap.cloudgames.Payment.Domain.Enums
+{
+    public enum PaymentStatus
+    {
+        Pending,
+        Approved,
+        Denied
+    }
+}
