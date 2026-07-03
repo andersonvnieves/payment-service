@@ -11,25 +11,29 @@ namespace br.com.fiap.cloudgames.Payment.Infrastructure.Messaging.Publishers
     public abstract class RabbitMqMessagePublisher : IMessagePublisher
     {
         private readonly RabbitMqConnection _connection;
+        private readonly string _exchange;
+        private readonly string _routingKey;
 
-        public RabbitMqMessagePublisher(RabbitMqConnection connection)
+        public RabbitMqMessagePublisher(RabbitMqConnection connection, string exchange, string routingKey)
         {
             _connection = connection;
+            _exchange = exchange;
+            _routingKey = routingKey;
         }
-        public async Task PublishAsync<T>(string exchange, string routingKey, T message)
+        public async Task PublishAsync<T>(T message)
         {
             var conn = _connection.Connection;
 
             var channel = await conn.CreateChannelAsync();
 
             await channel.ExchangeDeclareAsync(
-                exchange: exchange,
+                exchange: _exchange,
                 type: ExchangeType.Topic,
                 durable: true,
                 autoDelete: false);
 
             await channel.QueueDeclareAsync(
-                queue: routingKey,
+                queue: _routingKey,
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
@@ -39,8 +43,8 @@ namespace br.com.fiap.cloudgames.Payment.Infrastructure.Messaging.Publishers
                 JsonSerializer.Serialize(message));
 
             await channel.BasicPublishAsync(
-                exchange: exchange,
-                routingKey: routingKey,
+                exchange: _exchange,
+                routingKey: _routingKey,
                 body: body);
         }    
     }

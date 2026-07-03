@@ -1,12 +1,8 @@
-using br.com.fiap.cloudgames.Payment.Domain.Aggregates;
-using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Configurations;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Context;
 
-public class AppDbContext : IdentityDbContext<IdentityUser>
+public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     { }
@@ -14,8 +10,8 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        //modelBuilder.ApplyConfiguration(new UserConfiguration());
     }
     
-    public DbSet<User> Users { get; set; }
+    public DbSet<Domain.Aggregates.Payment> Users { get; set; }
 }

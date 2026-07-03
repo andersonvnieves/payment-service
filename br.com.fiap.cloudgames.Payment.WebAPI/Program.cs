@@ -1,10 +1,5 @@
 using br.com.fiap.cloudgames.Payment.Application.Publishers;
-using br.com.fiap.cloudgames.Payment.Application.Services;
 using br.com.fiap.cloudgames.Payment.Application.UnitsOfWork;
-using br.com.fiap.cloudgames.Payment.Application.UseCases.User.ChangeUserRole;
-using br.com.fiap.cloudgames.Payment.Application.UseCases.User.LogIn;
-using br.com.fiap.cloudgames.Payment.Application.UseCases.User.RegisterUser;
-using br.com.fiap.cloudgames.Payment.Application.UseCases.User.RetrieveUser;
 using br.com.fiap.cloudgames.Payment.Domain.Repositories;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Config;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Messagging;
@@ -12,14 +7,16 @@ using br.com.fiap.cloudgames.Payment.Infrastructure.Messaging.Publishers;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Context;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Repositories;
-using br.com.fiap.cloudgames.Payment.Infrastructure.Service;
 using br.com.fiap.cloudgames.Payment.WebAPI.Middlewares;
-using br.com.fiap.cloudgames.Payment.WebAPI.Setup;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using br.com.fiap.cloudgames.Payment.Application.Consumers;
+using br.com.fiap.cloudgames.Payment.Application.Handlers;
+using br.com.fiap.cloudgames.Payment.Application.UseCases.ApprovePayment;
+using br.com.fiap.cloudgames.Payment.Application.UseCases.DeclinePayment;
+using br.com.fiap.cloudgames.Payment.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,19 +36,6 @@ builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("R
 //Add Db Context
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")), ServiceLifetime.Scoped );
-
-//Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(option =>
-    {
-        option.Password.RequireUppercase = true;
-        option.Password.RequireLowercase = true;
-        option.Password.RequireDigit = true;
-        option.Password.RequireNonAlphanumeric = true;
-        option.Password.RequiredLength = 8;
-        option.User.RequireUniqueEmail = true;
-    })
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddApiEndpoints();
 
 //Authentication
 builder.Services.AddAuthentication(options =>
@@ -79,25 +63,23 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 //Repositories
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 //UnitOfWork
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //Messaging
 builder.Services.AddSingleton<RabbitMqConnection>();
-//builder.Services.AddScoped<IMessagePublisher, RabbitMqMessagePublisher>();
-builder.Services.AddScoped<IUserCreatedEventPublisher, UserCreatedEventPublisher>();
+builder.Services.AddSingleton<IOrderCreatedEventConsumer>();
+builder.Services.AddScoped<IPaymentProcessedEventPublisher, PaymentProcessedEventPublisher>();
+builder.Services.AddScoped<IPaymentFailedEventPublisher, PaymentFailedEventPublisher>();
 
 //UseCases
-builder.Services.AddScoped<LogInUseCase>();
-builder.Services.AddScoped<RegisterUserUseCase>();
-builder.Services.AddScoped<ChangeUserRoleUseCase>();
-builder.Services.AddScoped<RetrieveUserUseCase>();
+builder.Services.AddScoped<ApprovePaymentUseCase>();
+builder.Services.AddScoped<DeclinePaymentUseCase>();
 
-//Services
-builder.Services.AddScoped<IUserAuthService, IdentityUserAuthService>();
-builder.Services.AddScoped<ITokenService, JwtTokenService>();
+//Handlers
+builder.Services.AddSingleton<OrderCreatedEventHandler>();
 
 builder.Services.AddControllers();
 
@@ -110,11 +92,14 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new()
     {
-        Title = "FIAP Cloud Games (FCG)",
+        Title = "PaymentAPI (FCG)",
         Version = "v1",
-        Description = "API de jogos e usuários"
+        Description = "Payment API "
     });
 });
+
+// Add Worker
+builder.Services.AddHostedService<Worker>();
 
 var app = builder.Build();
 
@@ -125,20 +110,8 @@ using (var scope = app.Services.CreateScope())
     await dbContext.Database.MigrateAsync();
 }
 
-//Seed Identity
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var configuration = services.GetRequiredService<IConfiguration>();
-    await IdentitySeeder.SeedRoles(services, configuration);
-    await IdentitySeeder.SeedBootstrapUser(services, configuration);
-}
-
 app.UseRequestLoggingMiddleware();
 app.UseErrorHandlingMiddleware();
-
-//Map Identity Endpoints
-//app.MapIdentityApi<IdentityUser>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -156,3 +129,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+//TODO: UM USUARIO NAO PODE ALTERAR NADA DE OUTRO, SEMPRE TEM QUE VALIDAR O USER ID NO TOKEN

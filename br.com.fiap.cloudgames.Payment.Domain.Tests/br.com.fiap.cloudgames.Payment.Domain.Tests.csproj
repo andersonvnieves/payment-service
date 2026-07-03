@@ -28,4 +28,10 @@
         <Using Include="Xunit" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Aggregates\" />
+      <Folder Include="TestData\" />
+      <Folder Include="ValueObjects\" />
+    </ItemGroup>
+
 </Project>

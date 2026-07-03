@@ -75,7 +75,4 @@ dotnet run
 ```
 
 
-PS C:\REPOS\fiap-12nett-tc-02-userapi> dotnet ef migrations add InitialDB `
->>     --project br.com.fiap.cloudgames.Payment.Infrastructure `
->>     --startup-project br.com.fiap.cloudgames.Payment.WebAPI `
->>     --output-dir Persistence/Migrations
+dotnet ef migrations add InitialDB --project br.com.fiap.cloudgames.Payment.Infrastructure --startup-project br.com.fiap.cloudgames.Payment.WebAPI --output-dir Persistence/Migrations

@@ -29,4 +29,9 @@
         <Using Include="Xunit" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="TestData\" />
+      <Folder Include="UseCases\" />
+    </ItemGroup>
+
 </Project>

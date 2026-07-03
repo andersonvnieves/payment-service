@@ -32,4 +32,9 @@
       <ProjectReference Include="..\br.com.fiap.cloudgames.Payment.Domain\br.com.fiap.cloudgames.Payment.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="ContextData\" />
+      <Folder Include="StepsDefinition\" />
+    </ItemGroup>
+
 </Project>
