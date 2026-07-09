@@ -1,8 +1,6 @@
 ﻿using br.com.fiap.cloudgames.Payment.Application.Publishers;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Messagging;
 using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 

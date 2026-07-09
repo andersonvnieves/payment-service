@@ -1,14 +1,14 @@
-using br.com.fiap.cloudgames.Payment.Infrastructure.Messagging.Consumers;
+using br.com.fiap.cloudgames.Payment.Application.Consumers;
 
 namespace br.com.fiap.cloudgames.Payment.WebAPI;
 
 public class Worker: BackgroundService
 {
     private readonly ILogger<Worker> _logger;
-    private readonly OrderCreatedEventConsumer _orderCreatedEventConsumer;
+    private readonly IOrderCreatedEventConsumer _orderCreatedEventConsumer;
 
     public Worker(ILogger<Worker> logger,
-        OrderCreatedEventConsumer orderCreatedEventConsumer)
+        IOrderCreatedEventConsumer orderCreatedEventConsumer)
     {
         _logger = logger;
         _orderCreatedEventConsumer = orderCreatedEventConsumer;

@@ -1,22 +1,25 @@
+using br.com.fiap.cloudgames.Payment.Application.Abstractions;
+using br.com.fiap.cloudgames.Payment.Application.Consumers;
+using br.com.fiap.cloudgames.Payment.Application.Handlers;
 using br.com.fiap.cloudgames.Payment.Application.Publishers;
 using br.com.fiap.cloudgames.Payment.Application.UnitsOfWork;
+using br.com.fiap.cloudgames.Payment.Application.UseCases.ApprovePayment;
+using br.com.fiap.cloudgames.Payment.Application.UseCases.DeclinePayment;
 using br.com.fiap.cloudgames.Payment.Domain.Repositories;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Config;
+using br.com.fiap.cloudgames.Payment.Infrastructure.Identity;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Messagging;
+using br.com.fiap.cloudgames.Payment.Infrastructure.Messagging.Consumers;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Messaging.Publishers;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Context;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Repositories;
+using br.com.fiap.cloudgames.Payment.WebAPI;
 using br.com.fiap.cloudgames.Payment.WebAPI.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
-using br.com.fiap.cloudgames.Payment.Application.Consumers;
-using br.com.fiap.cloudgames.Payment.Application.Handlers;
-using br.com.fiap.cloudgames.Payment.Application.UseCases.ApprovePayment;
-using br.com.fiap.cloudgames.Payment.Application.UseCases.DeclinePayment;
-using br.com.fiap.cloudgames.Payment.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +64,8 @@ builder.Services.AddAuthentication(options =>
 
 //Authorization
 builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, JwtCurrentUser>();
 
 //Repositories
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
@@ -70,9 +75,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //Messaging
 builder.Services.AddSingleton<RabbitMqConnection>();
-builder.Services.AddSingleton<IOrderCreatedEventConsumer>();
+builder.Services.AddSingleton<IOrderCreatedEventConsumer, OrderCreatedEventConsumer>();
 builder.Services.AddScoped<IPaymentProcessedEventPublisher, PaymentProcessedEventPublisher>();
-builder.Services.AddScoped<IPaymentFailedEventPublisher, PaymentFailedEventPublisher>();
 
 //UseCases
 builder.Services.AddScoped<ApprovePaymentUseCase>();
@@ -129,6 +133,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
-//TODO: UM USUARIO NAO PODE ALTERAR NADA DE OUTRO, SEMPRE TEM QUE VALIDAR O USER ID NO TOKEN

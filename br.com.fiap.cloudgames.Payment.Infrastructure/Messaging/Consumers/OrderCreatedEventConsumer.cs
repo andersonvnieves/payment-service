@@ -10,11 +10,11 @@ namespace br.com.fiap.cloudgames.Payment.Infrastructure.Messagging.Consumers;
 public class OrderCreatedEventConsumer : RabbitMqMessageConsumer<OrderCreatedEvent>, IOrderCreatedEventConsumer
 {
     private readonly OrderCreatedEventHandler _handler;
-    private readonly IOptions<RabbitMqSettings> _options;
     
-    public OrderCreatedEventConsumer(RabbitMqConnection rabbitConnection, ILogger logger, string exchange, string routingKey) 
-        : base(rabbitConnection, logger, exchange, routingKey)
+    public OrderCreatedEventConsumer(RabbitMqConnection rabbitConnection, OrderCreatedEventHandler handler, ILogger<OrderCreatedEvent> logger, IOptions<RabbitMqSettings> options) 
+        : base(rabbitConnection, logger, options.Value.OrderCreatedEvent.Exchange, options.Value.OrderCreatedEvent.RoutingKey)
     {
+        _handler = handler;
     }
 
     public async Task ConsumeAsync()

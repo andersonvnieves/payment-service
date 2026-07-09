@@ -23,7 +23,7 @@ namespace br.com.fiap.cloudgames.Payment.WebAPI.Controllers
         [HttpPost("/{orderId}/approve")]
         public async Task<IActionResult> Approve([FromRoute] Guid orderId)
         {
-            await _approvePaymentUseCase.ExecuteAsync(orderId, orderId);
+            await _approvePaymentUseCase.ExecuteAsync(orderId);
             return Ok();
         }
         
@@ -31,7 +31,7 @@ namespace br.com.fiap.cloudgames.Payment.WebAPI.Controllers
         [HttpPost("/{orderId}/decline")]
         public async Task<IActionResult> Decline([FromRoute] Guid orderId)
         {
-            await _declineOrderUseCase.ExecuteAsync(orderId, orderId);
+            await _declineOrderUseCase.ExecuteAsync(orderId);
             return Ok();
         }
     }

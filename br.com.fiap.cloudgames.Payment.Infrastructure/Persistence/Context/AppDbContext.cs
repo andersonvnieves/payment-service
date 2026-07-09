@@ -1,3 +1,4 @@
+using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Context;
@@ -10,8 +11,8 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        //modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new PaymentConfiguration());
     }
-    
-    public DbSet<Domain.Aggregates.Payment> Users { get; set; }
+
+    public DbSet<Domain.Aggregates.Payment> Payments { get; set; }
 }

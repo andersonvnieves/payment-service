@@ -6,7 +6,8 @@ namespace br.com.fiap.cloudgames.Payment.Infrastructure.Config
 {
     public class RabbitMqSettings
     {
-        public string URI { get; set; }
-        public RabbitMqQueueDetailsSettings UserCreatedEvent { get; set; }
+        public required string URI { get; set; }
+        public RabbitMqQueueDetailsSettings OrderCreatedEvent { get; set; }
+        public RabbitMqQueueDetailsSettings PaymentProcessedEvent { get; set; }
     }
 }

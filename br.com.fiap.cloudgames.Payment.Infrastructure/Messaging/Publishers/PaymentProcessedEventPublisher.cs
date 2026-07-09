@@ -9,7 +9,7 @@ namespace br.com.fiap.cloudgames.Payment.Infrastructure.Messaging.Publishers;
 public class PaymentProcessedEventPublisher: RabbitMqMessagePublisher, IPaymentProcessedEventPublisher
 {
     public PaymentProcessedEventPublisher(RabbitMqConnection connection, IOptions<RabbitMqSettings> options) 
-        : base(connection, options.Value.UserCreatedEvent.Exchange, options.Value.UserCreatedEvent.RoutingKey)
+        : base(connection, options.Value.PaymentProcessedEvent.Exchange, options.Value.PaymentProcessedEvent.RoutingKey)
     { }
 
     public async Task PublishAsync(PaymentProcessedEvent message)

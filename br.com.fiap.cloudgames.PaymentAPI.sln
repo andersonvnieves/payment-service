@@ -20,8 +20,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "br.com.fiap.cloudgames.Paym
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "br.com.fiap.cloudgames.Payment.Specs", "br.com.fiap.cloudgames.Payment.Specs\br.com.fiap.cloudgames.Payment.Specs.csproj", "{BB6BF4C8-7951-4AF3-A755-BDCB6B9DFC72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "br.com.fiap.cloudgames.Payment.WorkerService", "br.com.fiap.cloudgames.Payment.WorkerService\br.com.fiap.cloudgames.Payment.WorkerService.csproj", "{6C26C2C1-EE71-48A5-AA7D-5A524AF5161B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,10 +54,6 @@ Global
 		{BB6BF4C8-7951-4AF3-A755-BDCB6B9DFC72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB6BF4C8-7951-4AF3-A755-BDCB6B9DFC72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB6BF4C8-7951-4AF3-A755-BDCB6B9DFC72}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C26C2C1-EE71-48A5-AA7D-5A524AF5161B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C26C2C1-EE71-48A5-AA7D-5A524AF5161B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C26C2C1-EE71-48A5-AA7D-5A524AF5161B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C26C2C1-EE71-48A5-AA7D-5A524AF5161B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +66,8 @@ Global
 		{34651BA6-CD9E-461A-9FF8-FFFAD2D90231} = {3881E08D-6683-45FB-BFFA-5F1F6634FA68}
 		{5E0B6A20-5326-4ADF-87BC-15728C62D48C} = {3881E08D-6683-45FB-BFFA-5F1F6634FA68}
 		{BB6BF4C8-7951-4AF3-A755-BDCB6B9DFC72} = {3881E08D-6683-45FB-BFFA-5F1F6634FA68}
-		{6C26C2C1-EE71-48A5-AA7D-5A524AF5161B} = {D23B4905-7310-4CF1-B93B-74D785DAE5D4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8A516F41-A490-456E-B3EC-1ABB1DDBD28B}
 	EndGlobalSection
 EndGlobal
