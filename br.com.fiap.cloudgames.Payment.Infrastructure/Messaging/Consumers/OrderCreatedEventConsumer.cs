@@ -17,6 +17,11 @@ public class OrderCreatedEventConsumer : RabbitMqMessageConsumer<OrderCreatedEve
     {
     }
 
+    public async Task ConsumeAsync()
+    {
+        await base.ConsumeAsync();
+    }
+
     protected override async Task HandleMessageAsync(OrderCreatedEvent message)
     {
         await _handler.HandleAsync(message);

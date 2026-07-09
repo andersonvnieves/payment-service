@@ -4,7 +4,7 @@ using System.Text;
 
 namespace br.com.fiap.cloudgames.Payment.Application.Services
 {
-    internal interface IPaymentProcessorService
+    public interface IPaymentProcessorService
     {
     }
 }
