@@ -2,7 +2,6 @@ using br.com.fiap.cloudgames.Payment.Application.Events;
 using br.com.fiap.cloudgames.Payment.Application.UnitsOfWork;
 using br.com.fiap.cloudgames.Payment.Domain.Repositories;
 using br.com.fiap.cloudgames.Payment.Domain.ValueObjects;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace br.com.fiap.cloudgames.Payment.Application.Handlers;
 
@@ -11,15 +10,12 @@ public class OrderCreatedEventHandler
     private readonly IPaymentRepository _paymentRepository;
     private readonly IUnitOfWork _unitOfWork;
     
-    public OrderCreatedEventHandler(IServiceScopeFactory serviceScopeFactory)
+    public OrderCreatedEventHandler(
+        IPaymentRepository paymentRepository,
+        IUnitOfWork unitOfWork)
     {
-        using var scope = serviceScopeFactory.CreateScope();
-
-        _paymentRepository =
-            scope.ServiceProvider.GetRequiredService<IPaymentRepository>();
-
-        _unitOfWork =
-            scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+        _paymentRepository = paymentRepository;
+        _unitOfWork = unitOfWork;
     }
     
     public async Task HandleAsync(OrderCreatedEvent orderCreatedEvent)
@@ -33,7 +29,7 @@ public class OrderCreatedEventHandler
             await _unitOfWork.CommitAsync();
             return;
         }
-        catch (Exception e)
+        catch
         {
             await _unitOfWork.RollbackAsync();
             throw;

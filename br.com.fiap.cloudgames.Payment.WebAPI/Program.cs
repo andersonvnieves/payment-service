@@ -17,6 +17,7 @@ using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Repositories;
 using br.com.fiap.cloudgames.Payment.WebAPI;
 using br.com.fiap.cloudgames.Payment.WebAPI.Middlewares;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
@@ -42,22 +43,24 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 //Authentication
 builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = "Bearer";
-        options.DefaultChallengeScheme = "Bearer";
-    })
+{
+    options.DefaultAuthenticateScheme = "Bearer";
+    options.DefaultChallengeScheme = "Bearer";
+})
     .AddJwtBearer("Bearer", options =>
     {
+        options.MapInboundClaims = false;
         options.TokenValidationParameters = new TokenValidationParameters()
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            
+
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+            NameClaimType = JwtRegisteredClaimNames.Name,
             RoleClaimType = ClaimTypes.Role
         };
     });
@@ -75,7 +78,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //Messaging
 builder.Services.AddSingleton<RabbitMqConnection>();
-builder.Services.AddSingleton<IOrderCreatedEventConsumer, OrderCreatedEventConsumer>();
+builder.Services.AddScoped<IOrderCreatedEventConsumer, OrderCreatedEventConsumer>();
 builder.Services.AddScoped<IPaymentProcessedEventPublisher, PaymentProcessedEventPublisher>();
 
 //UseCases
@@ -83,7 +86,7 @@ builder.Services.AddScoped<ApprovePaymentUseCase>();
 builder.Services.AddScoped<DeclinePaymentUseCase>();
 
 //Handlers
-builder.Services.AddSingleton<OrderCreatedEventHandler>();
+builder.Services.AddScoped<OrderCreatedEventHandler>();
 
 builder.Services.AddControllers();
 

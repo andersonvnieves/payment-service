@@ -5,23 +5,24 @@ namespace br.com.fiap.cloudgames.Payment.WebAPI;
 public class Worker: BackgroundService
 {
     private readonly ILogger<Worker> _logger;
-    private readonly IOrderCreatedEventConsumer _orderCreatedEventConsumer;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public Worker(ILogger<Worker> logger,
-        IOrderCreatedEventConsumer orderCreatedEventConsumer)
+    public Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory)
     {
         _logger = logger;
-        _orderCreatedEventConsumer = orderCreatedEventConsumer;
+        _scopeFactory = scopeFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        try
-        {
-            _logger.LogInformation("Starting Worker");
+        _logger.LogInformation("Starting Worker");
+        using var scope = _scopeFactory.CreateScope();
 
-            await _orderCreatedEventConsumer.ConsumeAsync();
-            
+        var consumer = scope.ServiceProvider
+            .GetRequiredService<IOrderCreatedEventConsumer>();
+        try
+        {            
+            await consumer.ConsumeAsync();            
             await Task.Delay(Timeout.Infinite, stoppingToken);
             _logger.LogInformation("Stopping Worker");
         }
@@ -31,7 +32,7 @@ public class Worker: BackgroundService
         }
         finally
         {
-            await _orderCreatedEventConsumer.DisposeAsync();
+            await consumer.DisposeAsync();
         }
     }
 }

@@ -5,7 +5,6 @@ using br.com.fiap.cloudgames.Payment.Application.UnitsOfWork;
 using br.com.fiap.cloudgames.Payment.Domain.Aggregates;
 using br.com.fiap.cloudgames.Payment.Domain.Exceptions;
 using br.com.fiap.cloudgames.Payment.Domain.Repositories;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
 namespace br.com.fiap.cloudgames.Payment.Application.Tests.Handlers;
@@ -14,29 +13,15 @@ public class OrderCreatedEventHandlerTests
 {
     private readonly Mock<IPaymentRepository> _paymentRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly Mock<IServiceProvider> _serviceProviderMock;
-    private readonly Mock<IServiceScope> _serviceScopeMock;
-    private readonly Mock<IServiceScopeFactory> _serviceScopeFactoryMock;
     private readonly OrderCreatedEventHandler _sut;
 
     public OrderCreatedEventHandlerTests()
     {
         _paymentRepositoryMock = new Mock<IPaymentRepository>(MockBehavior.Strict);
         _unitOfWorkMock = new Mock<IUnitOfWork>(MockBehavior.Strict);
-        _serviceProviderMock = new Mock<IServiceProvider>(MockBehavior.Strict);
-        _serviceScopeMock = new Mock<IServiceScope>(MockBehavior.Strict);
-        _serviceScopeFactoryMock = new Mock<IServiceScopeFactory>(MockBehavior.Strict);
-
-        _serviceScopeFactoryMock.Setup(x => x.CreateScope()).Returns(_serviceScopeMock.Object);
-        _serviceScopeMock.Setup(x => x.ServiceProvider).Returns(_serviceProviderMock.Object);
-        _serviceScopeMock.Setup(x => x.Dispose());
-
-        _serviceProviderMock.Setup(x => x.GetService(typeof(IPaymentRepository)))
-            .Returns(_paymentRepositoryMock.Object);
-        _serviceProviderMock.Setup(x => x.GetService(typeof(IUnitOfWork)))
-            .Returns(_unitOfWorkMock.Object);
-
-        _sut = new OrderCreatedEventHandler(_serviceScopeFactoryMock.Object);
+        _sut = new OrderCreatedEventHandler(
+            _paymentRepositoryMock.Object,
+            _unitOfWorkMock.Object);
     }
 
     [Fact]

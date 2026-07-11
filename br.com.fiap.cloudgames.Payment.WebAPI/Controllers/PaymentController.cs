@@ -11,7 +11,6 @@ namespace br.com.fiap.cloudgames.Payment.WebAPI.Controllers
     {
         private readonly ApprovePaymentUseCase _approvePaymentUseCase;
         private readonly DeclinePaymentUseCase _declineOrderUseCase;
-        private const string BASIC_ROLE = "user";
 
         public PaymentController(ApprovePaymentUseCase approvePaymentUseCase, DeclinePaymentUseCase declineOrderUseCase)
         {
@@ -19,17 +18,17 @@ namespace br.com.fiap.cloudgames.Payment.WebAPI.Controllers
             _declineOrderUseCase = declineOrderUseCase;
         }
         
-        [Authorize(Roles = BASIC_ROLE)]
-        [HttpPost("/{orderId}/approve")]
-        public async Task<IActionResult> Approve([FromRoute] Guid orderId)
+        [Authorize]
+        [HttpPost("approve")]
+        public async Task<IActionResult> Approve([FromQuery] Guid orderId)
         {
             await _approvePaymentUseCase.ExecuteAsync(orderId);
             return Ok();
         }
-        
-        [Authorize(Roles = BASIC_ROLE)]
-        [HttpPost("/{orderId}/decline")]
-        public async Task<IActionResult> Decline([FromRoute] Guid orderId)
+
+        [Authorize]
+        [HttpPost("decline")]
+        public async Task<IActionResult> Decline([FromQuery] Guid orderId)
         {
             await _declineOrderUseCase.ExecuteAsync(orderId);
             return Ok();
