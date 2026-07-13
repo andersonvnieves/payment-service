@@ -37,6 +37,11 @@ namespace br.com.fiap.cloudgames.Payment.Infrastructure.Messaging.Publishers
                 autoDelete: false,
                 arguments: null);
 
+            await channel.QueueBindAsync(
+                queue: _routingKey,
+                exchange: _exchange,
+                routingKey: _routingKey);
+
             var body = Encoding.UTF8.GetBytes(
                 JsonSerializer.Serialize(message));
 

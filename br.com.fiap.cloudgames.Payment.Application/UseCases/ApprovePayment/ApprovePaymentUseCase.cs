@@ -36,22 +36,21 @@ public class ApprovePaymentUseCase
             payment.PaymentApproved();
             await _paymentRepository.UpdateAsync(payment);
             await _unitOfWork.CommitAsync();
-            await _paymentProcessedEventPublisher.PublishAsync(new PaymentProcessedEvent()
-            {
-                EventId = Guid.NewGuid(),
-                UserId = _currentUser.UserId,
-                OrderId = payment.OrderId,
-                PaymentStatus = payment.Status,
-                Name = _currentUser.Name,
-                Email = _currentUser.Email
-            });            
         }
-        catch (Exception e)
+        catch
         {
             await _unitOfWork.RollbackAsync();
             throw;
         }
 
-        
+        await _paymentProcessedEventPublisher.PublishAsync(new PaymentProcessedEvent()
+        {
+            EventId = Guid.NewGuid(),
+            UserId = _currentUser.UserId,
+            OrderId = payment.OrderId,
+            PaymentStatus = payment.Status,
+            Name = _currentUser.Name,
+            Email = _currentUser.Email
+        });
     }
 }
