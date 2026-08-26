@@ -16,6 +16,7 @@ using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Context;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Repositories;
 using br.com.fiap.cloudgames.Payment.WebAPI;
 using br.com.fiap.cloudgames.Payment.WebAPI.Middlewares;
+using br.com.fiap.cloudgames.Payment.WebAPI.Setup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -110,12 +111,8 @@ builder.Services.AddHostedService<Worker>();
 
 var app = builder.Build();
 
-//Run Migrations
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await dbContext.Database.MigrateAsync();
-}
+//Run Migrations and Seeds
+await app.InitializeDatabaseAsync();
 
 app.UseRequestLoggingMiddleware();
 app.UseErrorHandlingMiddleware();
