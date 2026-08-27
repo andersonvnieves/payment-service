@@ -20,6 +20,7 @@ using br.com.fiap.cloudgames.Payment.WebAPI.Setup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using Prometheus;
 using System.Security.Claims;
 using System.Text;
 
@@ -114,6 +115,8 @@ var app = builder.Build();
 //Run Migrations and Seeds
 await app.InitializeDatabaseAsync();
 
+app.UseRouting();
+
 app.UseRequestLoggingMiddleware();
 app.UseErrorHandlingMiddleware();
 
@@ -129,6 +132,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMetricServer();
+app.UseHttpMetrics();
 
 app.MapControllers();
 

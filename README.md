@@ -69,3 +69,6 @@ docker run --rm -p 8082:8080 fgc-payment-service:latest
 ```
 
 Forneça as configurações de banco, JWT e RabbitMQ por variáveis de ambiente ao executar a imagem isoladamente.
+
+
+docker build -t fgc-payment-service:latest . 
