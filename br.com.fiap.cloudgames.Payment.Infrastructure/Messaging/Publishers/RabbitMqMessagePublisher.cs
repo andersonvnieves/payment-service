@@ -49,6 +49,6 @@ namespace br.com.fiap.cloudgames.Payment.Infrastructure.Messaging.Publishers
                 exchange: _exchange,
                 routingKey: _routingKey,
                 body: body);
-        }    
+        }
     }
 }

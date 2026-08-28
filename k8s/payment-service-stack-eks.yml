@@ -11,8 +11,6 @@ stringData:
   connection-string: "Server=payment-db-service;Database=FGC_Payment;User Id=sa;Password=rohPav-juKmeb-DIhku9!;TrustServerCertificate=True"
   jwt-key: "8594df0eb5ecb4c96f8824462cc7d2e1885c138908f2f7b4357af54b72ab2ed6"
   rabbitmq-uri: "amqp://admin:admin123@rabbitmq-service:5672/"
-  AWS_ACCESS_KEY_ID: ""
-  AWS_SECRET_ACCESS_KEY: ""  
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -23,16 +21,14 @@ data:
   jwt-token-ttl: "10"
   order-created-exchange: fgc
   order-created-routing-key: order.created
-  payment-processed-exchange: fgc
-  payment-processed-routing-key: payment.processed
-  aws-sqs-payment-processed-queue-url: "https://sqs.sa-east-1.amazonaws.com/230287251097/payment-processed-queue"
-  AWS_REGION: "sa-east-1"
+  aws-sqs-payment-processed-queue-url: "https://sqs.us-east-1.amazonaws.com/257500279765/payment-processed-queue"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata: { name: payment-db-pvc, namespace: fgc }
 spec:
   accessModes: [ReadWriteOnce]
+  storageClassName: gp2
   resources: { requests: { storage: 1Gi } }
 ---
 apiVersion: apps/v1
@@ -124,12 +120,6 @@ spec:
           imagePullPolicy: IfNotPresent
           ports: [{ containerPort: 8080 }]
           env:
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom: { secretKeyRef: { name: payment-api-secrets, key: AWS_ACCESS_KEY_ID } }
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom: { secretKeyRef: { name: payment-api-secrets, key: AWS_SECRET_ACCESS_KEY } }
-            - name: AWS_REGION
-              valueFrom: { configMapKeyRef: { name: payment-api-config, key: AWS_REGION } }
             - name: ConnectionStrings__Default
               valueFrom: { secretKeyRef: { name: payment-api-secrets, key: connection-string } }
             - name: Jwt__Issuer
@@ -146,11 +136,7 @@ spec:
               valueFrom: { configMapKeyRef: { name: payment-api-config, key: order-created-exchange } }
             - name: RabbitMQ__OrderCreatedEvent__RoutingKey
               valueFrom: { configMapKeyRef: { name: payment-api-config, key: order-created-routing-key } }
-            - name: RabbitMQ__PaymentProcessedEvent__Exchange
-              valueFrom: { configMapKeyRef: { name: payment-api-config, key: payment-processed-exchange } }
-            - name: RabbitMQ__PaymentProcessedEvent__RoutingKey
-              valueFrom: { configMapKeyRef: { name: payment-api-config, key: payment-processed-routing-key } }
-            - name: AwsSQS__PaymentProcessedQueueUrl
+            - name: AwsSQS__UserCreatedQueueUrl
               valueFrom: { configMapKeyRef: { name: payment-api-config, key: aws-sqs-payment-processed-queue-url } }
 ---
 apiVersion: v1

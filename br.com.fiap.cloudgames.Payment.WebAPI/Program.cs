@@ -1,3 +1,4 @@
+using Amazon.SQS;
 using br.com.fiap.cloudgames.Payment.Application.Abstractions;
 using br.com.fiap.cloudgames.Payment.Application.Consumers;
 using br.com.fiap.cloudgames.Payment.Application.Handlers;
@@ -38,6 +39,7 @@ builder.Logging.AddSimpleConsole(options =>
 //Settings
 builder.Services.Configure<JwtTokenSettings>(builder.Configuration.GetSection("Jwt"));
 builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
+builder.Services.Configure<AwsSqsSettings>(builder.Configuration.GetSection("AwsSQS"));
 
 //Add Db Context
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -79,6 +81,7 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //Messaging
+builder.Services.AddAWSService<IAmazonSQS>();
 builder.Services.AddSingleton<RabbitMqConnection>();
 builder.Services.AddScoped<IOrderCreatedEventConsumer, OrderCreatedEventConsumer>();
 builder.Services.AddScoped<IPaymentProcessedEventPublisher, PaymentProcessedEventPublisher>();
