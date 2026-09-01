@@ -25,7 +25,7 @@ data:
   order-created-routing-key: order.created
   payment-processed-exchange: fgc
   payment-processed-routing-key: payment.processed
-  aws-sqs-payment-processed-queue-url: "https://sqs.sa-east-1.amazonaws.com/230287251097/payment-processed-queue"
+  aws-sqs-payment-processed-queue-url: ""
   AWS_REGION: "sa-east-1"
 ---
 apiVersion: v1
