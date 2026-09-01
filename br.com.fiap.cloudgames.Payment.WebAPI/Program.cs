@@ -1,3 +1,4 @@
+using Amazon.SQS;
 using br.com.fiap.cloudgames.Payment.Application.Abstractions;
 using br.com.fiap.cloudgames.Payment.Application.Consumers;
 using br.com.fiap.cloudgames.Payment.Application.Handlers;
@@ -16,9 +17,11 @@ using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Context;
 using br.com.fiap.cloudgames.Payment.Infrastructure.Persistence.Repositories;
 using br.com.fiap.cloudgames.Payment.WebAPI;
 using br.com.fiap.cloudgames.Payment.WebAPI.Middlewares;
+using br.com.fiap.cloudgames.Payment.WebAPI.Setup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using Prometheus;
 using System.Security.Claims;
 using System.Text;
 
@@ -36,6 +39,7 @@ builder.Logging.AddSimpleConsole(options =>
 //Settings
 builder.Services.Configure<JwtTokenSettings>(builder.Configuration.GetSection("Jwt"));
 builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
+builder.Services.Configure<AwsSqsSettings>(builder.Configuration.GetSection("AwsSQS"));
 
 //Add Db Context
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -77,6 +81,7 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //Messaging
+builder.Services.AddAWSService<IAmazonSQS>();
 builder.Services.AddSingleton<RabbitMqConnection>();
 builder.Services.AddScoped<IOrderCreatedEventConsumer, OrderCreatedEventConsumer>();
 builder.Services.AddScoped<IPaymentProcessedEventPublisher, PaymentProcessedEventPublisher>();
@@ -110,12 +115,10 @@ builder.Services.AddHostedService<Worker>();
 
 var app = builder.Build();
 
-//Run Migrations
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await dbContext.Database.MigrateAsync();
-}
+//Run Migrations and Seeds
+await app.InitializeDatabaseAsync();
+
+app.UseRouting();
 
 app.UseRequestLoggingMiddleware();
 app.UseErrorHandlingMiddleware();
@@ -132,6 +135,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMetricServer();
+app.UseHttpMetrics();
 
 app.MapControllers();
 

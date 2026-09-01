@@ -16,6 +16,7 @@ Serviço de pagamentos. Consome `order.created` do RabbitMQ, registra pagamentos
 - .NET SDK 10;
 - SQL Server na porta `1433`;
 - RabbitMQ na porta `5672` (painel: `15672`).
+- Uma Fila SQS para eventos de pagamentos aprovados ou negados.
 
 Para iniciar a plataforma completa, consulte o [README da orquestração](https://github.com/andersonvnieves/orchestration/blob/main/README.md).
 
@@ -33,6 +34,7 @@ $env:RabbitMQ__OrderCreatedEvent__Exchange = "fgc"
 $env:RabbitMQ__OrderCreatedEvent__RoutingKey = "order.created"
 $env:RabbitMQ__PaymentProcessedEvent__Exchange = "fgc"
 $env:RabbitMQ__PaymentProcessedEvent__RoutingKey = "payment.processed"
+$env:AwsSQS__PaymentProcessedQueueUrl = "https://sqs.<AWS_REGION>.amazonaws.com/<AWS_ACCOUNT>/<QUEUE_NAME>"
 ```
 
 ## Executar localmente
@@ -68,4 +70,10 @@ docker build -t fgc-payment-service:latest .
 docker run --rm -p 8082:8080 fgc-payment-service:latest
 ```
 
-Forneça as configurações de banco, JWT e RabbitMQ por variáveis de ambiente ao executar a imagem isoladamente.
+Forneça as configurações de banco, JWT, RabbitMQ e SQS por variáveis de ambiente ao executar a imagem isoladamente.
+
+## Kubernetes
+
+```powershell
+kubectl apply -f k8s\payment-service-stack.yml
+```
