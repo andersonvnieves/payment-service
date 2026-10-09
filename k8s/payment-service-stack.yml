@@ -120,7 +120,7 @@ spec:
               echo "Todas as dependências estão prontas!"
       containers:
         - name: payment-api
-          image: fgc-payment-service:latest
+          image: 230287251097.dkr.ecr.sa-east-1.amazonaws.com/fgc-payment-service:latest
           imagePullPolicy: IfNotPresent
           ports: [{ containerPort: 8080 }]
           env:
