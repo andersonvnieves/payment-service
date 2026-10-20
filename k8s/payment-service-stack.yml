@@ -91,6 +91,7 @@ kind: PersistentVolumeClaim
 metadata: { name: payment-db-pvc, namespace: fgc }
 spec:
   accessModes: [ReadWriteOnce]
+  storageClassName: gp3
   resources: { requests: { storage: 1Gi } }
 ---
 apiVersion: apps/v1
