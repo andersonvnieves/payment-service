@@ -1,4 +1,4 @@
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: payment-api-secrets
@@ -12,9 +12,6 @@ spec:
     name: payment-api-secrets
     creationPolicy: Owner
   data:
-    - secretKey: sql-password
-      remoteRef:
-        key: /fgc/payment/sql-password
     - secretKey: connection-string
       remoteRef:
         key: /fgc/payment/connection-string
@@ -31,7 +28,7 @@ spec:
       remoteRef:
         key: /fgc/aws/secret-access-key
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: payment-api-config
@@ -111,29 +108,29 @@ spec:
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom: { secretKeyRef: { name: payment-api-secrets, key: AWS_SECRET_ACCESS_KEY } }
             - name: AWS_REGION
-              valueFrom: { configMapKeyRef: { name: payment-api-config, key: AWS_REGION } }
+              valueFrom: { secretKeyRef: { name: payment-api-config, key: AWS_REGION } }
             - name: ConnectionStrings__Default
               valueFrom: { secretKeyRef: { name: payment-api-secrets, key: connection-string } }
             - name: Jwt__Issuer
-              valueFrom: { configMapKeyRef: { name: payment-api-config, key: jwt-issuer } }
+              valueFrom: { secretKeyRef: { name: payment-api-config, key: jwt-issuer } }
             - name: Jwt__Audience
-              valueFrom: { configMapKeyRef: { name: payment-api-config, key: jwt-audience } }
+              valueFrom: { secretKeyRef: { name: payment-api-config, key: jwt-audience } }
             - name: Jwt__Key
               valueFrom: { secretKeyRef: { name: payment-api-secrets, key: jwt-key } }
             - name: Jwt__TokenTtlInMinutes
-              valueFrom: { configMapKeyRef: { name: payment-api-config, key: jwt-token-ttl } }
+              valueFrom: { secretKeyRef: { name: payment-api-config, key: jwt-token-ttl } }
             - name: RabbitMQ__URI
               valueFrom: { secretKeyRef: { name: payment-api-secrets, key: rabbitmq-uri } }
             - name: RabbitMQ__OrderCreatedEvent__Exchange
-              valueFrom: { configMapKeyRef: { name: payment-api-config, key: order-created-exchange } }
+              valueFrom: { secretKeyRef: { name: payment-api-config, key: order-created-exchange } }
             - name: RabbitMQ__OrderCreatedEvent__RoutingKey
-              valueFrom: { configMapKeyRef: { name: payment-api-config, key: order-created-routing-key } }
+              valueFrom: { secretKeyRef: { name: payment-api-config, key: order-created-routing-key } }
             - name: RabbitMQ__PaymentProcessedEvent__Exchange
-              valueFrom: { configMapKeyRef: { name: payment-api-config, key: payment-processed-exchange } }
+              valueFrom: { secretKeyRef: { name: payment-api-config, key: payment-processed-exchange } }
             - name: RabbitMQ__PaymentProcessedEvent__RoutingKey
-              valueFrom: { configMapKeyRef: { name: payment-api-config, key: payment-processed-routing-key } }
+              valueFrom: { secretKeyRef: { name: payment-api-config, key: payment-processed-routing-key } }
             - name: AwsSQS__PaymentProcessedQueueUrl
-              valueFrom: { configMapKeyRef: { name: payment-api-config, key: aws-sqs-payment-processed-queue-url } }
+              valueFrom: { secretKeyRef: { name: payment-api-config, key: aws-sqs-payment-processed-queue-url } }
 ---
 apiVersion: v1
 kind: Service
