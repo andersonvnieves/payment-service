@@ -23,7 +23,7 @@ namespace br.com.fiap.cloudgames.Payment.WebAPI.Controllers
         public async Task<IActionResult> Approve([FromQuery] Guid orderId)
         {
             await _approvePaymentUseCase.ExecuteAsync(orderId);
-            return Ok();
+            return Ok($"Order {orderId} approved");
         }
 
         [Authorize]
@@ -31,7 +31,7 @@ namespace br.com.fiap.cloudgames.Payment.WebAPI.Controllers
         public async Task<IActionResult> Decline([FromQuery] Guid orderId)
         {
             await _declineOrderUseCase.ExecuteAsync(orderId);
-            return Ok();
+            return Ok($"Order {orderId} declined");
         }
     }
 }
